@@ -41,6 +41,10 @@ config NICE_VIEW_GEM_WPM_FIXED_RANGE_MAX
     default 100
     depends on NICE_VIEW_GEM_WPM
 
+config NICE_VIEW_GEM_BLANK_ON_IDLE
+    bool "Blank display on idle to save battery"
+    default y
+
 config NICE_VIEW_GEM_ANIMATION
     bool "Enable animation on peripheral"
     default y
@@ -65,5 +69,12 @@ config NICE_VIEW_WIDGET_STATUS
     select ZMK_WPM
 
 endif # NICE_VIEW_GEM_WPM
+
+if NICE_VIEW_GEM_BLANK_ON_IDLE
+
+config ZMK_DISPLAY_BLANK_ON_IDLE
+    default y
+
+endif # NICE_VIEW_GEM_BLANK_ON_IDLE
 
 endif # SHIELD_NICE_VIEW_GEM
