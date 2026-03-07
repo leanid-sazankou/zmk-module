@@ -9,21 +9,27 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/events/endpoint_changed.h>
 #include <zmk/events/layer_state_changed.h>
 #include <zmk/events/usb_conn_state_changed.h>
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #include <zmk/events/wpm_state_changed.h>
+#endif
 #include <zmk/battery.h>
 #include <zmk/ble.h>
 #include <zmk/display.h>
 #include <zmk/endpoints.h>
 #include <zmk/keymap.h>
 #include <zmk/usb.h>
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #include <zmk/wpm.h>
+#endif
 
 #include "battery.h"
 #include "layer.h"
 #include "output.h"
 #include "profile.h"
 #include "screen.h"
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #include "wpm.h"
+#endif
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -43,6 +49,7 @@ static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
     rotate_canvas(canvas, cbuf);
 }
 
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
     lv_obj_t *canvas = lv_obj_get_child(widget, 1);
     fill_background(canvas);
@@ -53,9 +60,14 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     // Rotate for horizontal display
     rotate_canvas(canvas, cbuf);
 }
+#endif
 
 static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     lv_obj_t *canvas = lv_obj_get_child(widget, 2);
+#else
+    lv_obj_t *canvas = lv_obj_get_child(widget, 1);
+#endif
     fill_background(canvas);
 
     // Draw widgets
@@ -170,6 +182,7 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_usb_conn_state_changed);
 ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 #endif
 
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 /**
  * WPM status
  **/
@@ -195,6 +208,7 @@ struct wpm_status_state wpm_status_get_state(const zmk_event_t *eh) {
 ZMK_DISPLAY_WIDGET_LISTENER(widget_wpm_status, struct wpm_status_state, wpm_status_update_cb,
                             wpm_status_get_state)
 ZMK_SUBSCRIPTION(widget_wpm_status, zmk_wpm_state_changed);
+#endif
 
 /**
  * Initialization
@@ -208,9 +222,11 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     lv_obj_align(top, LV_ALIGN_TOP_RIGHT, 0, 0);
     lv_canvas_set_buffer(top, widget->cbuf, BUFFER_SIZE, BUFFER_SIZE, LV_IMG_CF_TRUE_COLOR);
 
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     lv_obj_t *middle = lv_canvas_create(widget->obj);
     lv_obj_align(middle, LV_ALIGN_TOP_RIGHT, BUFFER_OFFSET_MIDDLE, 0);
     lv_canvas_set_buffer(middle, widget->cbuf2, BUFFER_SIZE, BUFFER_SIZE, LV_IMG_CF_TRUE_COLOR);
+#endif
 
     lv_obj_t *bottom = lv_canvas_create(widget->obj);
     lv_obj_align(bottom, LV_ALIGN_TOP_RIGHT, BUFFER_OFFSET_BOTTOM, 0);
@@ -220,7 +236,9 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     widget_battery_status_init();
     widget_layer_status_init();
     widget_output_status_init();
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     widget_wpm_status_init();
+#endif
 
     return 0;
 }

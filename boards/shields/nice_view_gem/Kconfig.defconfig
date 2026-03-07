@@ -27,13 +27,19 @@ config LV_Z_MEM_POOL_SIZE
 config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
     imply NICE_VIEW_WIDGET_STATUS
 
+config NICE_VIEW_GEM_WPM
+    bool "Enable WPM gauge and chart on central"
+    default n
+
 config NICE_VIEW_GEM_WPM_FIXED_RANGE
     bool "Enable fixed range for WPM gauge/chart"
     default y
+    depends on NICE_VIEW_GEM_WPM
 
 config NICE_VIEW_GEM_WPM_FIXED_RANGE_MAX
     int "Fixed range maximum for WPM gauge/chart"
     default 100
+    depends on NICE_VIEW_GEM_WPM
 
 config NICE_VIEW_GEM_ANIMATION
     bool "Enable animation on peripheral"
@@ -53,11 +59,11 @@ config NICE_VIEW_WIDGET_STATUS
 config NICE_VIEW_WIDGET_INVERTED
     bool "Invert display colors"
 
-if !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+if NICE_VIEW_GEM_WPM
 
 config NICE_VIEW_WIDGET_STATUS
     select ZMK_WPM
 
-endif # !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+endif # NICE_VIEW_GEM_WPM
 
 endif # SHIELD_NICE_VIEW_GEM

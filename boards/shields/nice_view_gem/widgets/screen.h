@@ -8,7 +8,9 @@ struct zmk_widget_screen {
     sys_snode_t node;
     lv_obj_t *obj;
     lv_color_t cbuf[BUFFER_SIZE * BUFFER_SIZE];
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     lv_color_t cbuf2[BUFFER_SIZE * BUFFER_SIZE];
+#endif
     lv_color_t cbuf3[BUFFER_SIZE * BUFFER_SIZE];
     struct status_state state;
 };

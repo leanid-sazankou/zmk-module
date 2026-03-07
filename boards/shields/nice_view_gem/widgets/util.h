@@ -7,7 +7,9 @@
 #define SCREEN_HEIGHT 160
 
 #define BUFFER_SIZE 68
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #define BUFFER_OFFSET_MIDDLE -44
+#endif
 #define BUFFER_OFFSET_BOTTOM -129
 
 #define LVGL_BACKGROUND                                                                            \
@@ -25,7 +27,9 @@ struct status_state {
     bool active_profile_bonded;
     uint8_t layer_index;
     const char *layer_label;
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     uint8_t wpm[10];
+#endif
 #else
     bool connected;
 #endif
