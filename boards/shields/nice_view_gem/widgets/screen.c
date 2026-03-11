@@ -7,7 +7,9 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/events/battery_state_changed.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #include <zmk/events/endpoint_changed.h>
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
 #include <zmk/events/layer_state_changed.h>
+#endif
 #include <zmk/events/usb_conn_state_changed.h>
 #if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #include <zmk/events/wpm_state_changed.h>
@@ -16,14 +18,18 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/ble.h>
 #include <zmk/display.h>
 #include <zmk/endpoints.h>
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
 #include <zmk/keymap.h>
+#endif
 #include <zmk/usb.h>
 #if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
 #include <zmk/wpm.h>
 #endif
 
 #include "battery.h"
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
 #include "layer.h"
+#endif
 #include "output.h"
 #include "profile.h"
 #include "screen.h"
@@ -72,7 +78,9 @@ static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status
 
     // Draw widgets
     draw_profile_status(canvas, state);
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
     draw_layer_status(canvas, state);
+#endif
 
     // Rotate for horizontal display
     rotate_canvas(canvas, cbuf);
@@ -116,6 +124,7 @@ ZMK_SUBSCRIPTION(widget_battery_status, zmk_battery_state_changed);
 ZMK_SUBSCRIPTION(widget_battery_status, zmk_usb_conn_state_changed);
 #endif /* IS_ENABLED(CONFIG_USB_DEVICE_STACK) */
 
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
 /**
  * Layer status
  **/
@@ -141,6 +150,7 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_layer_status, struct layer_status_state, laye
                             layer_status_get_state)
 
 ZMK_SUBSCRIPTION(widget_layer_status, zmk_layer_state_changed);
+#endif
 
 /**
  * Output status
@@ -234,7 +244,9 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
 
     sys_slist_append(&widgets, &widget->node);
     widget_battery_status_init();
+#if IS_ENABLED(CONFIG_NICE_VIEW_GEM_LAYER_NAME)
     widget_layer_status_init();
+#endif
     widget_output_status_init();
 #if IS_ENABLED(CONFIG_NICE_VIEW_GEM_WPM)
     widget_wpm_status_init();
